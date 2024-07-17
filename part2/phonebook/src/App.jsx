@@ -71,14 +71,12 @@ const App = () => {
   const handleDelete = (id) => {
     if (window.confirm("Confirm Delete?")) {
       const personToDelete = persons.find((person) => id === person.id);
-      const changedPersonsData = persons.filter(
-        (person) => person !== personToDelete
-      );
-      personService.deleteData(id, changedPersonsData).then((deletedData) => {
-        return setPersons(
-          persons.filter((person) => person.id !== deletedData.id)
+
+      personService
+        .deleteData(id, personToDelete)
+        .then((deletedData) =>
+          setPersons(persons.filter((person) => person.id != deletedData.id))
         );
-      });
     }
   };
 

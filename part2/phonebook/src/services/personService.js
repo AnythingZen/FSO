@@ -7,8 +7,8 @@ const getAll = () => {
   return request.then((response) => response.data);
 };
 
-const deleteData = (dataIDToDelete, newDatas) => {
-  const request = axios.delete(`${BASE_URL}/${dataIDToDelete}`, newDatas);
+const deleteData = (dataIDToDelete, personToDelete) => {
+  const request = axios.delete(`${BASE_URL}/${dataIDToDelete}`, personToDelete);
   return request.then((response) => response.data);
 };
 
@@ -20,7 +20,7 @@ const create = (newData) => {
 const update = (dataIDToUpdate, updatedData) => {
   const request = axios.put(`${BASE_URL}/${dataIDToUpdate}`, updatedData);
   return request.then((response) => response.data);
-}
+};
 
 export default {
   getAll,

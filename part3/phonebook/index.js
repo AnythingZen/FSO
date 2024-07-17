@@ -55,10 +55,11 @@ app.get("/api/persons/:id", (request, response) => {
 // Delete person
 app.delete("/api/persons/:id", (request, response) => {
   const id = request.params.id;
-  const personToDelete = phonebook.find((person) => person.id == id);
 
+  const personToDelete = phonebook.find((person) => person.id == id);
   phonebook = phonebook.filter((person) => person.id != id);
-  return response.status(204).json(personToDelete);
+
+  return response.status(202).json(personToDelete);
 });
 
 // Edit person info
