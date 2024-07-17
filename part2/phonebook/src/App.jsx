@@ -75,7 +75,9 @@ const App = () => {
         (person) => person !== personToDelete
       );
       personService.deleteData(id, changedPersonsData).then((deletedData) => {
-        setPersons(persons.filter((person) => person.id !== deletedData.id));
+        return setPersons(
+          persons.filter((person) => person.id !== deletedData.id)
+        );
       });
     }
   };

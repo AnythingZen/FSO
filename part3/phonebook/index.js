@@ -55,8 +55,10 @@ app.get("/api/persons/:id", (request, response) => {
 // Delete person
 app.delete("/api/persons/:id", (request, response) => {
   const id = request.params.id;
+  const personToDelete = phonebook.find((person) => person.id == id);
+
   phonebook = phonebook.filter((person) => person.id != id);
-  response.status(204).json(phonebook);
+  return response.status(204).json(personToDelete);
 });
 
 // Edit person info
@@ -71,7 +73,7 @@ app.put("/api/persons/:id", (request, response) => {
   }
 
   personFound.number = request.body.number;
-  return response.status(202).json(phonebook);
+  return response.status(202).json(personFound);
 });
 
 // Info on database
@@ -110,7 +112,7 @@ app.post("/api/persons", (request, response) => {
   };
 
   phonebook.push(newPerson);
-  response.json(phonebook);
+  response.json(newPerson);
 });
 
 const PORT = process.env.PORT || 3001;
