@@ -1,16 +1,20 @@
 const express = require("express");
 const morgan = require("morgan");
+require("dotenv").config();
+const Person = require("./models/persons");
+const { checkForDups, createAndSavePerson } = require("./models/helper");
 
 const app = express();
 
-app.use(express.json());
 app.use(express.static("dist"));
+app.use(express.json());
 app.use(morgan(":method :url :response-time :content"));
 
 morgan.token("content", function (req, res) {
   return JSON.stringify(req.body);
 });
 
+// Default test cases
 let phonebook = [
   {
     id: "1",
@@ -34,60 +38,76 @@ let phonebook = [
   },
 ];
 
+// Get all data
 app.get("/api/persons", (request, response) => {
-  response.json(phonebook);
+  Person.find({}).then((people) => {
+    response.json(people);
+  });
 });
 
 // Single person
 app.get("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  const personFound = phonebook.find((databaseID) => databaseID.id == id);
-
-  if (!personFound) {
-    return response.status(404).json({
-      error: "No such ID",
+  Person.findById(request.params.id)
+    .then((personFound) => {
+      return response.json(personFound);
+    })
+    .catch((error) => {
+      return response.status(404).json({
+        error: error.message,
+      });
     });
-  }
-
-  response.json(personFound);
 });
 
 // Delete person
 app.delete("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-
-  const personToDelete = phonebook.find((person) => person.id == id);
-  phonebook = phonebook.filter((person) => person.id != id);
-
-  return response.status(202).json(personToDelete);
+  Person.findByIdAndDelete(request.params.id)
+    .then((personToDelete) => {
+      console.log(personToDelete);
+      return response.status(202).json(personToDelete);
+    })
+    .catch((error) => {
+      console.log("error while deleting: ", error.message);
+      return response.status(404).json({
+        error: error.message,
+      });
+    });
 });
 
 // Edit person info
 app.put("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  const personFound = phonebook.find((person) => person.id == id);
-
-  if (!personFound) {
-    return response.status(404).json({
-      error: "Person does not exist in database",
+  Person.findByIdAndUpdate(
+    request.params.id,
+    {
+      number: request.body.number,
+    },
+    { new: true, runValidators: true, context: "query" }
+  )
+    .then((personReplaced) => {
+      console.log("put request for person replaced ", personReplaced);
+      return response.status(202).json(personReplaced);
+    })
+    .catch((error) => {
+      if (error.name === "ValidationError") {
+        return response.status(404).json({ error: error.message });
+      } else if (error.name === "CastError") {
+        return response.status(404).json({
+          error: `Person does not exists in database, ${error.message}`,
+        });
+      } else {
+        return response
+          .status(500)
+          .json({ error: `Internal Server Error ${error.message}` });
+      }
     });
-  }
-
-  personFound.number = request.body.number;
-  return response.status(202).json(personFound);
 });
 
 // Info on database
 app.get("/info", (request, response) => {
-  const data = `Phonebook has info for ${
-    phonebook.length
-  } people <br />${Date()}`;
-  response.send(data);
+  Person.countDocuments().then((length) => {
+    const data = `Phonebook has info for ${length} people <br />${Date()}`;
+    return response.send(data);
+  });
 });
-
-const getRandomID = (min, max) => {
-  return Math.floor(Math.random() * (max - min) + min);
-};
 
 // Create new person
 app.post("/api/persons", (request, response) => {
@@ -98,25 +118,25 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  const personFound = phonebook.find((person) => person.name === body.name);
-
-  if (personFound) {
-    return response.status(400).json({
-      error: "name must be unique",
+  checkForDups(body)
+    .then(() => {
+      createAndSavePerson(body)
+        .then((savedPerson) => {
+          console.log("Successfully saved ", savedPerson);
+          return response.json(savedPerson);
+        })
+        .catch((error) => {
+          return response.status(400).json({ error: error.message });
+        });
+    })
+    .catch((error) => {
+      return response.status(400).json({
+        error: `name must be unique, ${error.message}`,
+      });
     });
-  }
-
-  const newPerson = {
-    id: getRandomID(4, 1000),
-    name: body.name,
-    number: body.number,
-  };
-
-  phonebook.push(newPerson);
-  response.json(newPerson);
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
