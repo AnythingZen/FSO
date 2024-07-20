@@ -14,12 +14,20 @@ const deleteData = (dataIDToDelete, personToDelete) => {
 
 const create = (newData) => {
   const request = axios.post(BASE_URL, newData);
-  return request.then((response) => response.data);
+  return request
+    .then((response) => response.data)
+    .catch((error) => {
+      throw new Error(error.response.data.error);
+    });
 };
 
 const update = (dataIDToUpdate, updatedData) => {
   const request = axios.put(`${BASE_URL}/${dataIDToUpdate}`, updatedData);
-  return request.then((response) => response.data);
+  return request
+    .then((response) => response.data)
+    .catch((error) => {
+      throw new Error(error.response.data.error);
+    });
 };
 
 export default {

@@ -32,9 +32,10 @@ const App = () => {
     if (!personFound) {
       personService
         .create(newPerson)
-        .then((newData) => setPersons(persons.concat(newData)));
+        .then((newData) => setPersons(persons.concat(newData)))
+        .catch((error) => setMessage(error.message));
       setMessage(`Added ${newName}`);
-      setTimeout(() => setMessage(null), 2000);
+      setTimeout(() => setMessage(null), 5000);
     } else {
       if (
         window.confirm(
@@ -51,8 +52,8 @@ const App = () => {
             )
           )
           .catch((error) => {
-            setMessage(`Information of ${newName} has already been removed`);
-            setTimeout(() => setMessage(null), 2000);
+            setMessage(error.message);
+            setTimeout(() => setMessage(null), 5000);
           });
       }
     }
