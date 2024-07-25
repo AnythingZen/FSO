@@ -7,12 +7,28 @@ const listWithOneBlog = [
 	},
 ];
 
+const listToBeUpdated = [
+	{
+		title: "React patterns",
+		author: "Michael Chan",
+		url: "https://reactpatterns.com/",
+		likes: 15,
+	},
+	{
+		title: "React patterns",
+		author: "Michael Chan",
+		url: "https://reactpatterns.com/",
+		likes: "test",
+	},
+]
+
 const blogs = [
 	{
 		title: "React patterns",
 		author: "Michael Chan",
 		url: "https://reactpatterns.com/",
 		likes: 7,
+		_id: "66a22e5104e97c834bc61196",
 	},
 	{
 		title: "Go To Statement Considered Harmful",
@@ -88,6 +104,7 @@ const blogsMissingTitleOrUrl = [
 module.exports = {
 	blogs,
 	listWithOneBlog,
+	listToBeUpdated,
 	blogsWithSameLikes,
 	blogsMissingLikes,
 	blogsMissingTitleOrUrl,
