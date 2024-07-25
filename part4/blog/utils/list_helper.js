@@ -18,13 +18,7 @@ const favoriteBlog = (blogs) => {
 				: currentLikes;
 		}, blogs[0]);
 
-		console.log(
-			"______________________________TESTING ______________________________"
-		);
-		console.log("Final Highest Likes: ", highestLikesBlog);
-
 		const { title, author, likes } = highestLikesBlog;
-		console.log("ans = ", { title, author, likes });
 		return { title, author, likes };
 	}
 	return null;
