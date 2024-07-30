@@ -8,16 +8,6 @@ blogsRouter.get("/", async (request, response) => {
 	response.json(allBlogs);
 });
 
-const getTokenFrom = (request) => {
-	const authorization = request.get("authorization");
-
-	console.log("authorization is : ", authorization);
-	if (authorization && authorization.startsWith("Bearer")) {
-		return authorization.replace("Bearer ", "");
-	}
-	return null;
-};
-
 blogsRouter.post("/", async (request, response) => {
 	const blog = request.body;
 
@@ -26,10 +16,7 @@ blogsRouter.post("/", async (request, response) => {
 			.status(400)
 			.json({ error: "title or url properties are missing" });
 	}
-
-	const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
-	console.log("this is decoded token value: ", decodedToken);
-
+	const decodedToken = jwt.verify(request.token, process.env.SECRET);
 	if (!decodedToken.id) {
 		return response.status(401).json({ error: "token invalid" });
 	}

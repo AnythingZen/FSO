@@ -20,7 +20,7 @@ const listToBeUpdated = [
 		url: "https://reactpatterns.com/",
 		likes: "test",
 	},
-]
+];
 
 const blogs = [
 	{
@@ -99,7 +99,7 @@ const blogsMissingTitleOrUrl = [
 		title: "Star Wars",
 		author: "Your Father",
 	},
-]
+];
 
 module.exports = {
 	blogs,
