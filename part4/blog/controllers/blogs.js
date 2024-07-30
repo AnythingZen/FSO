@@ -1,21 +1,39 @@
 const blogsRouter = require("express").Router();
 const Blog = require("../models/blogDB");
 const User = require("../models/user");
+const jwt = require("jsonwebtoken");
 
 blogsRouter.get("/", async (request, response) => {
 	const allBlogs = await Blog.find({}).populate("user", { blogs: 0 });
 	response.json(allBlogs);
 });
 
+const getTokenFrom = (request) => {
+	const authorization = request.get("authorization");
+
+	console.log("authorization is : ", authorization);
+	if (authorization && authorization.startsWith("Bearer")) {
+		return authorization.replace("Bearer ", "");
+	}
+	return null;
+};
+
 blogsRouter.post("/", async (request, response) => {
 	const blog = request.body;
+
 	if (!blog.title || !blog.url) {
 		return response
 			.status(400)
 			.json({ error: "title or url properties are missing" });
 	}
 
-	const user = await User.findById(blog.userId);
+	const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+	console.log("this is decoded token value: ", decodedToken);
+
+	if (!decodedToken.id) {
+		return response.status(401).json({ error: "token invalid" });
+	}
+	const user = await User.findById(decodedToken.id);
 
 	const newBlog = new Blog({
 		title: blog.title,
