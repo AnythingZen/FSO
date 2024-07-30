@@ -1,5 +1,6 @@
 const blogsRouter = require("express").Router();
 const Blog = require("../models/blogDB");
+const User = require("../models/user");
 
 blogsRouter.get("/", async (request, response) => {
 	const allBlogs = await Blog.find({});
@@ -7,14 +8,28 @@ blogsRouter.get("/", async (request, response) => {
 });
 
 blogsRouter.post("/", async (request, response) => {
-	const blog = new Blog(request.body);
+	const blog = request.body;
 	if (!blog.title || !blog.url) {
 		return response
 			.status(400)
 			.json({ error: "title or url properties are missing" });
 	}
 
-	const savedBlog = await blog.save();
+	const user = await User.findById(blog.userId);
+
+	const newBlog = new Blog({
+		title: blog.title,
+		author: blog.author || "Unknown Author",
+		url: blog.url,
+		likes: blog.likes,
+		user: user.id,
+	});
+
+	const savedBlog = await newBlog.save();
+	console.log("savedBlog inside blogs.js : ", savedBlog)
+	user.blogs = user.blogs.concat(newBlog._id);
+	await user.save();
+
 	response.status(201).json(savedBlog);
 });
 
