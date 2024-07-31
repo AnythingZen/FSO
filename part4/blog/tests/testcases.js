@@ -28,7 +28,6 @@ const blogs = [
 		author: "Michael Chan",
 		url: "https://reactpatterns.com/",
 		likes: 7,
-		_id: "66a22e5104e97c834bc61196",
 	},
 	{
 		title: "Go To Statement Considered Harmful",
@@ -101,6 +100,12 @@ const blogsMissingTitleOrUrl = [
 	},
 ];
 
+const user = {
+	username: "PasswordIsUser123",
+	name: "Root",
+	password: "User123",
+};
+
 module.exports = {
 	blogs,
 	listWithOneBlog,
@@ -108,4 +113,6 @@ module.exports = {
 	blogsWithSameLikes,
 	blogsMissingLikes,
 	blogsMissingTitleOrUrl,
+	user,
+	
 };
