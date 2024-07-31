@@ -16,11 +16,8 @@ blogsRouter.post("/", async (request, response) => {
 			.status(400)
 			.json({ error: "title or url properties are missing" });
 	}
-	const decodedToken = jwt.verify(request.token, process.env.SECRET);
-	if (!decodedToken.id) {
-		return response.status(401).json({ error: "token invalid" });
-	}
-	const user = await User.findById(decodedToken.id);
+
+	const user = request.user;
 
 	const newBlog = new Blog({
 		title: blog.title,
@@ -45,7 +42,7 @@ blogsRouter.delete("/:id", async (request, response) => {
 		return response.status(401).json({ error: "token invalid" });
 	}
 
-	const user = await User.findById(decodedToken.id);
+	const user = request.user;
 
 	user.blogs = user.blogs.filter(
 		(blogId) => blogId.toString() !== id.toString()
