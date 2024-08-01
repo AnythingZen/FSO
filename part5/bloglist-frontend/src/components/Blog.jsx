@@ -1,7 +1,21 @@
 const Blog = ({ blog }) => (
-  <div>
-    {blog.title} {blog.author}
-  </div>  
-)
+	<div>
+		{blog.map((blog) => {
+			return (
+				<BlogDescriptions
+					key={blog.id}
+					title={blog.title}
+					author={blog.author}
+				/>
+			);
+		})}
+	</div>
+);
 
-export default Blog
+const BlogDescriptions = ({ title, author }) => (
+	<p>
+		{title} {author}
+	</p>
+);
+
+export default Blog;
