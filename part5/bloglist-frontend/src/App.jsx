@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
+import LogoutButton from "./components/LogoutButton";
 import loginService from "./services/login";
 import blogService from "./services/blogs";
 
@@ -13,6 +14,18 @@ const App = () => {
 
 	let token;
 
+	useEffect(() => {
+		const loggedUserJSON = window.localStorage.getItem("loggedInBlogUser");
+
+		if (loggedUserJSON) {
+			setIsLoggedIn(true);
+			const user = JSON.parse(loggedUserJSON);
+			blogService.setToken(user.token);
+			setUsername(() => user.username);
+			getUserBlogs();
+		}
+	}, []);
+
 	const handleUsername = ({ target }) => {
 		setUsername(() => target.value);
 	};
@@ -21,22 +34,24 @@ const App = () => {
 		setPassword(() => target.value);
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		const loginDetails = {
 			username,
 			password,
 		};
-		loginService
-			.login(loginDetails)
-			.then((response) => (token = response.token))
-			.catch((error) => setMessage(error.message));
+		try {
+			const loginResponse = await loginService.login(loginDetails);
 
-		setIsLoggedIn(true);
-		getUserBlogs();
-		setMessage(`${username} has successfully login`);
-		setTimeout(() => setMessage(null), 5000);
+			storeDetails(loginResponse);
+			setIsLoggedIn(true);
+			getUserBlogs();
+			setMessage(`${loginResponse.name} has successfully login`);
+		} catch (error) {
+			setMessage(() => error.response.data.error);
+			setTimeout(() => setMessage(null), 3000);
+		}
 	};
 
 	const getUserBlogs = async () => {
@@ -46,8 +61,25 @@ const App = () => {
 			.map((blog) => ({
 				title: blog.title,
 				author: blog.author,
+				id: blog.id,
 			}));
 		setBlogs(() => userBlogs);
+	};
+
+	const handleLogout = () => {
+		setIsLoggedIn(false)
+		window.localStorage.removeItem("loggedInBlogUser");
+		setUsername('')
+		setPassword('')
+		setMessage(null)
+	};
+
+	const storeDetails = (loginResponse) => {
+		window.localStorage.setItem(
+			"loggedInBlogUser",
+			JSON.stringify(loginResponse)
+		);
+		token = blogService.setToken(loginResponse.token);
 	};
 
 	return (
@@ -56,11 +88,12 @@ const App = () => {
 				<div>
 					<h2>Blogs</h2>
 					<h3>{message}</h3>
+					<LogoutButton handleLogout={handleLogout} />
 					<Blog blog={blogs} />
 				</div>
 			) : (
 				<div>
-					<h2>Log into application</h2>
+					<h2>log into application</h2>
 					<LoginForm
 						username={username}
 						handleUsername={handleUsername}
@@ -68,10 +101,13 @@ const App = () => {
 						handlePassword={handlePassword}
 						handleSubmit={handleSubmit}
 					/>
+					<h2>{message}</h2>
 				</div>
 			)}
 		</>
 	);
 };
+
+
 
 export default App;
