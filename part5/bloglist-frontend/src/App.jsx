@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
+import BlogForm from "./components/BlogForm";
 import LogoutButton from "./components/LogoutButton";
+import DisplayMessage from "./components/DisplayMessage";
 import loginService from "./services/login";
 import blogService from "./services/blogs";
 
@@ -10,9 +12,8 @@ const App = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [user, setUser] = useState("");
 	const [message, setMessage] = useState(null);
-
-	let token;
 
 	useEffect(() => {
 		const loggedUserJSON = window.localStorage.getItem("loggedInBlogUser");
@@ -22,6 +23,7 @@ const App = () => {
 			const user = JSON.parse(loggedUserJSON);
 			blogService.setToken(user.token);
 			setUsername(() => user.username);
+			setUser(user);
 			getUserBlogs();
 		}
 	}, []);
@@ -47,7 +49,6 @@ const App = () => {
 			storeDetails(loginResponse);
 			setIsLoggedIn(true);
 			getUserBlogs();
-			setMessage(`${loginResponse.name} has successfully login`);
 		} catch (error) {
 			setMessage(() => error.response.data.error);
 			setTimeout(() => setMessage(null), 3000);
@@ -67,33 +68,39 @@ const App = () => {
 	};
 
 	const handleLogout = () => {
-		setIsLoggedIn(false)
+		setIsLoggedIn(false);
 		window.localStorage.removeItem("loggedInBlogUser");
-		setUsername('')
-		setPassword('')
-		setMessage(null)
+		setUsername("");
+		setPassword("");
+		setMessage(null);
 	};
 
 	const storeDetails = (loginResponse) => {
+		setUser(loginResponse);
 		window.localStorage.setItem(
 			"loggedInBlogUser",
 			JSON.stringify(loginResponse)
 		);
-		token = blogService.setToken(loginResponse.token);
+		blogService.setToken(loginResponse.token);
 	};
 
 	return (
 		<>
 			{isLoggedIn ? (
 				<div>
-					<h2>Blogs</h2>
-					<h3>{message}</h3>
-					<LogoutButton handleLogout={handleLogout} />
+					<h1>Blogs</h1>
+					<DisplayMessage message={message} />
+					<h3>
+						{user.name} logged in{" "}
+						<LogoutButton handleLogout={handleLogout} />
+					</h3>
+					<BlogForm setNewBlog={setBlogs} setMessage={setMessage} />
 					<Blog blog={blogs} />
 				</div>
 			) : (
 				<div>
-					<h2>log into application</h2>
+					<h1>Log into application</h1>
+					<DisplayMessage message={message} />
 					<LoginForm
 						username={username}
 						handleUsername={handleUsername}
@@ -101,13 +108,10 @@ const App = () => {
 						handlePassword={handlePassword}
 						handleSubmit={handleSubmit}
 					/>
-					<h2>{message}</h2>
 				</div>
 			)}
 		</>
 	);
 };
-
-
 
 export default App;
