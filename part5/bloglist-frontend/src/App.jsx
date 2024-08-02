@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
-import BlogForm from "./components/BlogForm";
+import ButtonToggleForm from "./components/ButtonToggleForm";
 import LogoutButton from "./components/LogoutButton";
 import DisplayMessage from "./components/DisplayMessage";
 import loginService from "./services/login";
@@ -94,7 +94,7 @@ const App = () => {
 						{user.name} logged in{" "}
 						<LogoutButton handleLogout={handleLogout} />
 					</h3>
-					<BlogForm setNewBlog={setBlogs} setMessage={setMessage} />
+					<ButtonToggleForm setBlogs={setBlogs} setMessage={setMessage} />
 					<Blog blog={blogs} />
 				</div>
 			) : (

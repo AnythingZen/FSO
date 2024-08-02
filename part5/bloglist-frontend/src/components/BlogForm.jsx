@@ -1,7 +1,7 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-const BlogForm = ({ setNewBlog, setMessage }) => {
+const BlogForm = ({ setNewBlog, setMessage, cancelForm }) => {
 	const [title, setTitle] = useState("");
 	const [author, setAuthor] = useState("");
 	const [url, setUrl] = useState("");
@@ -16,9 +16,10 @@ const BlogForm = ({ setNewBlog, setMessage }) => {
 		try {
 			const blogResponse = await blogService.createBlog(newBlog);
 			resetState();
-			setMessage(() => newBlog);
+			setMessage(blogResponse);
 			setTimeout(() => setMessage(null), 3000);
 			setNewBlog((blogs) => blogs.concat(blogResponse));
+			cancelForm((prevState) => !prevState);
 		} catch (error) {
 			setMessage(() => error.response.data.error);
 			setTimeout(() => setMessage(null), 3000);
@@ -52,21 +53,27 @@ const BlogForm = ({ setNewBlog, setMessage }) => {
 				<br />
 				<label>
 					author :{" "}
-					<input
-						type="text"
-						value={author}
-						onChange={handleAuthor}
-						required
-					/>
+					<input type="text" value={author} onChange={handleAuthor} />
 				</label>
 				<br />
 				<label>
 					url *:{" "}
-					<input type="text" value={url} onChange={handleUrl} />
+					<input
+						type="text"
+						value={url}
+						onChange={handleUrl}
+						required
+					/>
 				</label>
 				<br />
 				<button type="submit">Create</button>
 			</form>
+			<button
+				type="button"
+				onClick={() => cancelForm((prevState) => !prevState)}
+			>
+				Cancel
+			</button>
 		</div>
 	);
 };
