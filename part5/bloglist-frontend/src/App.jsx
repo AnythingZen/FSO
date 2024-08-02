@@ -62,6 +62,8 @@ const App = () => {
 			.map((blog) => ({
 				title: blog.title,
 				author: blog.author,
+				url: blog.url,
+				likes: blog.likes,
 				id: blog.id,
 			}));
 		setBlogs(() => userBlogs);
@@ -94,7 +96,10 @@ const App = () => {
 						{user.name} logged in{" "}
 						<LogoutButton handleLogout={handleLogout} />
 					</h3>
-					<ButtonToggleForm setBlogs={setBlogs} setMessage={setMessage} />
+					<ButtonToggleForm
+						setBlogs={setBlogs}
+						setMessage={setMessage}
+					/>
 					<Blog blog={blogs} />
 				</div>
 			) : (
