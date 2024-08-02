@@ -57,15 +57,10 @@ const App = () => {
 
 	const getUserBlogs = async () => {
 		const allData = await blogService.getAll();
-		const userBlogs = allData
-			.filter((blog) => blog.user.username.includes(username))
-			.map((blog) => ({
-				title: blog.title,
-				author: blog.author,
-				url: blog.url,
-				likes: blog.likes,
-				id: blog.id,
-			}));
+		const userBlogs = allData.filter((blog) =>
+			blog.user.username.includes(username)
+		);
+
 		setBlogs(() => userBlogs);
 	};
 
