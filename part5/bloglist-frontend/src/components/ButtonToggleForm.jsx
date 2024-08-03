@@ -1,5 +1,6 @@
 import { useState } from "react";
 import BlogForm from "./BlogForm";
+import PropTypes from "prop-types";
 
 const ButtonToggleForm = ({ setBlogs, setMessage }) => {
 	const [toggleForm, setToggleForm] = useState(false);
@@ -21,6 +22,11 @@ const ButtonToggleForm = ({ setBlogs, setMessage }) => {
 			)}
 		</>
 	);
+};
+
+BlogForm.propTypes = {
+	setBlogs: PropTypes.func.isRequired,
+	setMessage: PropTypes.func.isRequired,
 };
 
 export default ButtonToggleForm;

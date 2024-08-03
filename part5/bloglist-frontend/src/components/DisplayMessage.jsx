@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 const DisplayMessage = ({ message }) => {
 	const addBlogStyle = {
 		color: "green",
@@ -22,6 +24,10 @@ const DisplayMessage = ({ message }) => {
 	) : (
 		<h2 style={errorStyle}>{message}</h2>
 	);
+};
+
+DisplayMessage.propTypes = {
+	message: PropTypes.object,
 };
 
 export default DisplayMessage;

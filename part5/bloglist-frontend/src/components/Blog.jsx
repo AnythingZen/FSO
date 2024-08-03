@@ -1,5 +1,6 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
+import PropTypes from "prop-types";
 
 const Blog = ({ blog }) => {
 	const renderBlog = () => {
@@ -92,7 +93,7 @@ const LikeButton = ({ handleLikeCount, currentLike, blogId }) => {
 const DeleteButton = ({ title, author, blogId, deleteBlog }) => {
 	const handleRemove = () => {
 		if (window.confirm(`Remove blog ${title} by ${author}`)) {
-			blogService.deleteBlog(blogId)
+			blogService.deleteBlog(blogId);
 			deleteBlog((isDeleted) => !isDeleted);
 		}
 	};
@@ -105,5 +106,31 @@ const DeleteButton = ({ title, author, blogId, deleteBlog }) => {
 		</div>
 	);
 };
+
+Blog.propTypes = {
+	blog: PropTypes.array.isRequired,
+};
+
+BlogToggleDescriptions.propTypes = {
+	title: PropTypes.string.isRequired,
+	author: PropTypes.string.isRequired,
+	url: PropTypes.string.isRequired,
+	likes: PropTypes.number.isRequired,
+	id: PropTypes.string.isRequired,
+	name: PropTypes.string.isRequired,
+}
+
+LikeButton.propTypes = {
+	handleLikeCount: PropTypes.func.isRequired,
+	currentLike: PropTypes.number.isRequired,
+	blogId: PropTypes.string.isRequired,
+}
+
+DeleteButton.propTypes = {
+	title: PropTypes.string.isRequired,
+	author: PropTypes.string.isRequired,
+	blogId: PropTypes.string.isRequired,
+	deleteBlog: PropTypes.func.isRequired
+}
 
 export default Blog;
