@@ -24,7 +24,7 @@ const ButtonToggleForm = ({ setBlogs, setMessage }) => {
 	);
 };
 
-BlogForm.propTypes = {
+ButtonToggleForm.propTypes = {
 	setBlogs: PropTypes.func.isRequired,
 	setMessage: PropTypes.func.isRequired,
 };

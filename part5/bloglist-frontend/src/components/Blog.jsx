@@ -34,7 +34,7 @@ const BlogToggleDescriptions = ({ title, author, url, likes, id, name }) => {
 				paddingTop: 10,
 				paddingLeft: 2,
 				margin: "10px 0",
-		  };
+			};
 
 	const handleClick = () => {
 		setView(!view);
@@ -118,19 +118,19 @@ BlogToggleDescriptions.propTypes = {
 	likes: PropTypes.number.isRequired,
 	id: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
-}
+};
 
 LikeButton.propTypes = {
 	handleLikeCount: PropTypes.func.isRequired,
 	currentLike: PropTypes.number.isRequired,
 	blogId: PropTypes.string.isRequired,
-}
+};
 
 DeleteButton.propTypes = {
 	title: PropTypes.string.isRequired,
 	author: PropTypes.string.isRequired,
 	blogId: PropTypes.string.isRequired,
-	deleteBlog: PropTypes.func.isRequired
-}
+	deleteBlog: PropTypes.func.isRequired,
+};
 
 export default Blog;
