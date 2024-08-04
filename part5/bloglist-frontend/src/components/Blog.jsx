@@ -39,38 +39,42 @@ const BlogToggleDescriptions = ({ title, author, url, likes, id, name }) => {
 	const handleClick = () => {
 		setView(!view);
 	};
-	return view ? (
-		<div style={blogStyle}>
-			<div>
-				{title}
-				<button type="button" onClick={handleClick}>
-					Hide
-				</button>
-			</div>
-			<div>{author}</div>
-			<div>{url}</div>
-			<div>
-				{likesCount}{" "}
-				<LikeButton
-					handleLikeCount={setLikesCount}
-					currentLike={likesCount}
-					blogId={id}
-				/>
-			</div>
-			<div>{name}</div>
-			<DeleteButton
-				title={title}
-				author={author}
-				blogId={id}
-				deleteBlog={setDeleteBlog}
-			/>
-		</div>
-	) : (
-		<div style={blogStyle}>
-			{title}
-			<button type="button" onClick={handleClick}>
-				View
-			</button>
+	return (
+		<div style={blogStyle} data-testid="blogContent">
+			{view ? (
+				<>
+					<div>
+						{title}
+						<button type="button" onClick={handleClick}>
+							Hide
+						</button>
+					</div>
+					<div>{author}</div>
+					<div>{url}</div>
+					<div>
+						{likesCount}{" "}
+						<LikeButton
+							handleLikeCount={setLikesCount}
+							currentLike={likesCount}
+							blogId={id}
+						/>
+					</div>
+					<div>{name}</div>
+					<DeleteButton
+						title={title}
+						author={author}
+						blogId={id}
+						deleteBlog={setDeleteBlog}
+					/>
+				</>
+			) : (
+				<>
+					{title} {author}
+					<button type="button" onClick={handleClick}>
+						View
+					</button>
+				</>
+			)}
 		</div>
 	);
 };
