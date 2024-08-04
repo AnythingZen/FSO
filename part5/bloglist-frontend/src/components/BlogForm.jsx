@@ -49,12 +49,12 @@ const BlogForm = ({ setNewBlog, setMessage, cancelForm }) => {
 			<form onSubmit={(e) => handleBlogSubmit(e)}>
 				<label>
 					title *:{" "}
-					<input type="text" value={title} onChange={handleTitle} />
+					<input type="text" value={title} onChange={handleTitle} placeholder="title"/>
 				</label>
 				<br />
 				<label>
 					author :{" "}
-					<input type="text" value={author} onChange={handleAuthor} />
+					<input type="text" value={author} onChange={handleAuthor} placeholder="author"/>
 				</label>
 				<br />
 				<label>
@@ -63,11 +63,12 @@ const BlogForm = ({ setNewBlog, setMessage, cancelForm }) => {
 						type="text"
 						value={url}
 						onChange={handleUrl}
+						placeholder="url"
 						required
 					/>
 				</label>
 				<br />
-				<button type="submit">Create</button>
+				<button type="submit" data-testid="createBlog">Create</button>
 			</form>
 			<button
 				type="button"

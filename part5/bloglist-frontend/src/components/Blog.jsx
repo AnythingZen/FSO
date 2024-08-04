@@ -88,7 +88,7 @@ const LikeButton = ({ handleLikeCount, currentLike, blogId }) => {
 		blogService.updateBlog(blogId, newLikes);
 	};
 	return (
-		<button type="button" onClick={incrementLikes}>
+		<button type="button" onClick={incrementLikes} data-testid="likeButton">
 			like
 		</button>
 	);
@@ -138,3 +138,4 @@ DeleteButton.propTypes = {
 };
 
 export default Blog;
+export { BlogToggleDescriptions, LikeButton };

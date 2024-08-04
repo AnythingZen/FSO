@@ -16,7 +16,7 @@ const ButtonToggleForm = ({ setBlogs, setMessage }) => {
 					cancelForm={setToggleForm}
 				/>
 			) : (
-				<button type="button" onClick={openForm}>
+				<button type="button" onClick={openForm} data-testid="toggleButton">
 					New Blog
 				</button>
 			)}
