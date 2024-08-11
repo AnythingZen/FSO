@@ -3,11 +3,13 @@ const Blog = require("../models/blogDB");
 const jwt = require("jsonwebtoken");
 const middleware = require("../utils/middleware");
 
+// Get all blogs
 blogsRouter.get("/", async (request, response) => {
 	const allBlogs = await Blog.find({}).populate("user", { blogs: 0 });
 	response.json(allBlogs);
 });
 
+// Create Blogs
 blogsRouter.post(
 	"/",
 	middleware.tokenExtractor,
@@ -40,6 +42,7 @@ blogsRouter.post(
 	}
 );
 
+// Delete selected blog based on ID
 blogsRouter.delete(
 	"/:id",
 	middleware.tokenExtractor,
@@ -65,6 +68,7 @@ blogsRouter.delete(
 	}
 );
 
+// Update likes count based on ID
 blogsRouter.put("/:id", async (request, response) => {
 	const id = request.params.id;
 

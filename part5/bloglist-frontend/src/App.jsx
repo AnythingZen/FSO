@@ -1,30 +1,17 @@
 import { useState, useEffect } from "react";
-
 import Blog from "./components/Blog";
-
 import LoginForm from "./components/LoginForm";
-
 import ButtonToggleForm from "./components/ButtonToggleForm";
-
 import LogoutButton from "./components/LogoutButton";
-
 import DisplayMessage from "./components/DisplayMessage";
-
 import loginService from "./services/login";
-
 import blogService from "./services/blogs";
-
 const App = () => {
 	const [blogs, setBlogs] = useState([]);
-
 	const [username, setUsername] = useState("");
-
 	const [password, setPassword] = useState("");
-
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-
 	const [user, setUser] = useState("");
-
 	const [message, setMessage] = useState(null);
 
 	useEffect(() => {
@@ -32,15 +19,10 @@ const App = () => {
 
 		if (loggedUserJSON) {
 			setIsLoggedIn(true);
-
 			const user = JSON.parse(loggedUserJSON);
-
 			blogService.setToken(user.token);
-
 			setUsername(() => user.username);
-
 			setUser(user);
-
 			getUserBlogs();
 		}
 	}, []);
@@ -58,21 +40,16 @@ const App = () => {
 
 		const loginDetails = {
 			username,
-
 			password,
 		};
 
 		try {
 			const loginResponse = await loginService.login(loginDetails);
-
 			storeDetails(loginResponse);
-
 			setIsLoggedIn(true);
-
 			getUserBlogs();
 		} catch (error) {
 			setMessage(() => error.response.data.error);
-
 			setTimeout(() => setMessage(null), 3000);
 		}
 	};
@@ -89,25 +66,18 @@ const App = () => {
 
 	const handleLogout = () => {
 		setIsLoggedIn(false);
-
 		window.localStorage.removeItem("loggedInBlogUser");
-
 		setUsername("");
-
 		setPassword("");
-
 		setMessage(null);
 	};
 
 	const storeDetails = (loginResponse) => {
 		setUser(loginResponse);
-
 		window.localStorage.setItem(
 			"loggedInBlogUser",
-
 			JSON.stringify(loginResponse)
 		);
-
 		blogService.setToken(loginResponse.token);
 	};
 
