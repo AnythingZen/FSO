@@ -9,7 +9,6 @@ userRouter.get("/", async (request, response) => {
 
 userRouter.post("/", async (request, response) => {
 	const { username, name, password } = request.body;
-
 	const passwordHash = await bcrypt.hash(password, 10);
 
 	const user = new User({
