@@ -27,7 +27,7 @@ const DisplayMessage = ({ message }) => {
 };
 
 DisplayMessage.propTypes = {
-	message: PropTypes.object,
+	message: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
 };
 
 export default DisplayMessage;
